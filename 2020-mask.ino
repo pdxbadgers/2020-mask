@@ -1,5 +1,20 @@
+//forked from https://web.archive.org/web/20200618173024/https://github.com/TylerGlaiel/voicemask 
 //code by Tyler Glaiel
 //for this mask: https://twitter.com/TylerGlaiel/status/1265035386109128704
+
+//modifications for bsides pdx speaker gift:
+// - port to smaller and more robust arduino pro micro
+// - pull out pin assignments for easy modification
+// - move pin assignments around to match
+// - add pushbutton for on/standby switch
+// - add power control of microphone for standby mode
+
+#define LEDPIN 21
+#define MICGND 15
+#define MICVCC 14
+#define MICPIN A0
+#define SWGND 5
+#define SWITCH 9
 
 #include <Adafruit_NeoPixel.h>
 #include <Adafruit_NeoMatrix.h>
@@ -74,7 +89,7 @@ const PROGMEM uint8_t mouth_smile[8][8] = {
 };
 
 uint16_t palette[8] = {};
-Adafruit_NeoMatrix matrix = Adafruit_NeoMatrix(8, 8, 6,
+Adafruit_NeoMatrix matrix = Adafruit_NeoMatrix(8, 8, LEDPIN,
   NEO_MATRIX_BOTTOM     + NEO_MATRIX_RIGHT +
   NEO_MATRIX_ROWS    + NEO_MATRIX_ZIGZAG,
   NEO_GRB            + NEO_KHZ800);
@@ -97,6 +112,23 @@ unsigned long smiletimer = 0;
 unsigned long last_face = 0;
 
 void setup() {
+	//LEDPIN connects to 8x8 matrix
+    pinMode(LEDPIN, OUTPUT);
+	//MICGND is a digital out set to low for mic GND
+    pinMode(MICGND, OUTPUT);
+    digitalWrite(MICGND, LOW);
+	//MICVCC is a digital out, set to high to power on mic
+    pinMode(MICVCC, OUTPUT);
+    digitalWrite(MICVCC, HIGH);
+	//MICPIN is analog input of mic
+    pinMode(MICPIN, INPUT);
+	//SWGND is the far end of the pushbutton that pulls button low when pressed.
+    pinMode(SWGND, OUTPUT);
+    digitalWrite(SWGND, LOW);
+	//SWITCH is pushbutton input with internal pullup so defaults to high
+    pinMode(SWITCH, INPUT_PULLUP);
+
+      
     matrix.begin();
 
     palette[0] = matrix.Color(0,0,0);
@@ -109,17 +141,29 @@ void setup() {
     palette[7] = matrix.Color(255,255,255);
 
     Serial.begin(9600);
+
+	//TODO: add a welcome/thank you message at startup
 }
 
 float vol = 0;
 const uint16_t samples = 128;
 
 void loop() {
+	//TODO: low power mode.
+	//check status of switch
+		//if pressed, power off mic and clear display
+		//wait until swtich released
+		//setup pin change interrupt on switch, or software delay
+		//sleep
+		//wake
+		//power on mic
+		//restore display
+	//resume normal operation:
     float nvol = 0;
     int previous_peak = -1;
     
     for (int i = 0; i<samples; i++){
-        auto analog = analogRead(A7);
+        auto analog = analogRead(MICPIN);
         auto micline = abs(analog - 512);
 
         nvol = max(micline, nvol);
