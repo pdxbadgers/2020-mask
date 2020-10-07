@@ -15,6 +15,10 @@
 #define MICPIN A0
 #define SWGND 5
 #define SWITCH 9
+// BRIGHTNESS is passed to the matrix.brightness parameter. B is set in the individual colors. 
+#define BRIGHTNESS 255
+#define B 250
+
 
 #include <Adafruit_NeoPixel.h>
 #include <Adafruit_NeoMatrix.h>
@@ -90,8 +94,8 @@ const PROGMEM uint8_t mouth_smile[8][8] = {
 
 uint16_t palette[8] = {};
 Adafruit_NeoMatrix matrix = Adafruit_NeoMatrix(8, 8, LEDPIN,
-  NEO_MATRIX_BOTTOM     + NEO_MATRIX_RIGHT +
-  NEO_MATRIX_ROWS    + NEO_MATRIX_ZIGZAG,
+  NEO_MATRIX_TOP     + NEO_MATRIX_RIGHT +
+  NEO_MATRIX_COLUMNS    + NEO_MATRIX_ZIGZAG,
   NEO_GRB            + NEO_KHZ800);
 
 
@@ -132,13 +136,16 @@ void setup() {
     matrix.begin();
 
     palette[0] = matrix.Color(0,0,0);
-    palette[1] = matrix.Color(255,0,0);
-    palette[2] = matrix.Color(0,255,0);
-    palette[3] = matrix.Color(0,0,255);
-    palette[4] = matrix.Color(0,255,255);
-    palette[5] = matrix.Color(255,0,255);
-    palette[6] = matrix.Color(255,255,0);
-    palette[7] = matrix.Color(255,255,255);
+    palette[1] = matrix.Color(B,0,0);
+    palette[2] = matrix.Color(0,B,0);
+    palette[3] = matrix.Color(0,0,B);
+    palette[4] = matrix.Color(0,B,B);
+    palette[5] = matrix.Color(B,0,B);
+    palette[6] = matrix.Color(0,B,0);
+    palette[7] = matrix.Color(B,B,B);
+
+//    matrix.setBrightness(BRIGHTNESS);
+
 
     Serial.begin(9600);
 
