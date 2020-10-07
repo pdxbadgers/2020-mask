@@ -11,11 +11,18 @@ derived from https://github.com/TylerGlaiel/voicemask/blob/master/mask.ino, arch
 - Cotton face mask
 - USB power pack....
 
+## Changes:
+- The original used the Arduino Nano, which uses an (often fake) FT232, Atmega 328p, and USB Mini (yuck). This uses Arduino Pro mini with the much more robust Atmega 32u4 and usb micro.
+- The original uses a niche 9v battery and voltage regulator, this runs off standard 5v USB power banks, more efficient and lower heat output.
+- The original had an inline switch wired to the battery, this trades it for a button that turns off the display and mic and goes into low power mode
+- The original had several more wires involved, this minimizes the circuit and necessary solder points.
+
 ## Wiring:
-No additional wire needed, the LED panels probably already have it. Strip the wires, thread them through the arduino pin holes, and solder:
-- LED Matrix 5v to Arduino RAW
+No additional wire needed, the LED panels probably already have them. Strip the wires, thread them through the arduino pin holes, and solder:
+- LED Matrix 5v to Arduino VCC
 - LED Matrix GND to Arduino GND
 - LED Matrix DIN to Arduino A3 (digital 21)
+- Bridge solder jumper J1 (lets VUSB straight through to VCC, no overheating diodes)
 
 Add the microphone. No wire needed, can solder directly to the arduino. We'll use I/O pins for software-controllable power and ground:
 - Microphone VCC to Arduino 14
