@@ -22,13 +22,13 @@ derived from https://github.com/TylerGlaiel/voicemask/blob/master/mask.ino, arch
 
 ## Software:
 - clone this repo into your Arduino directory
--- on linux this is usually ~/Arduino
--- this should create a file ~/Arduino/2020-mask/2020-mask.ino
+ - on linux this is usually ~/Arduino
+ - this should create a file ~/Arduino/2020-mask/2020-mask.ino
 - go to 'Tools'->'Manage Libraries'
 - search for and install:
--- Adafruit NeoMatrix
--- Adafruit NeoPixel
--- Adafruit GFX Library
+ - Adafruit NeoMatrix
+ - Adafruit NeoPixel
+ - Adafruit GFX Library
 
 ## Programming:
 - Choose 'Tools'->'Board'->'Arduino Leonardo'
