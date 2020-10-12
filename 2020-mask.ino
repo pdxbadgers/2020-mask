@@ -13,7 +13,7 @@
 #define MICGND 15
 #define MICVCC 14
 #define MICPIN A0
-#define SWGND 5
+#define SWGND 6
 #define SWITCH 9
 // BRIGHTNESS is passed to the matrix.brightness parameter. B is set in the individual colors. 
 #define BRIGHTNESS 255
@@ -115,21 +115,27 @@ bool smiling = false;
 unsigned long smiletimer = 0;
 unsigned long last_face = 0;
 
+int state = HIGH;      // the current state of the output pin
+int reading;           // the current reading from the input pin
+int previous = LOW;    // the previous reading from the input pin
+long time = 0;         // the last time the output pin was toggled
+long debounce = 200;   // the debounce time, increase if the output flickers
+
 void setup() {
-	//LEDPIN connects to 8x8 matrix
+  //LEDPIN connects to 8x8 matrix
     pinMode(LEDPIN, OUTPUT);
-	//MICGND is a digital out set to low for mic GND
+  //MICGND is a digital out set to low for mic GND
     pinMode(MICGND, OUTPUT);
     digitalWrite(MICGND, LOW);
-	//MICVCC is a digital out, set to high to power on mic
+  //MICVCC is a digital out, set to high to power on mic
     pinMode(MICVCC, OUTPUT);
     digitalWrite(MICVCC, HIGH);
-	//MICPIN is analog input of mic
+  //MICPIN is analog input of mic
     pinMode(MICPIN, INPUT);
-	//SWGND is the far end of the pushbutton that pulls button low when pressed.
+  //SWGND is the far end of the pushbutton that pulls button low when pressed.
     pinMode(SWGND, OUTPUT);
     digitalWrite(SWGND, LOW);
-	//SWITCH is pushbutton input with internal pullup so defaults to high
+  //SWITCH is pushbutton input with internal pullup so defaults to high
     pinMode(SWITCH, INPUT_PULLUP);
 
       
@@ -149,23 +155,31 @@ void setup() {
 
     Serial.begin(9600);
 
-	//TODO: add a welcome/thank you message at startup
+  //TODO: add a welcome/thank you message at startup
 }
 
 float vol = 0;
 const uint16_t samples = 128;
 
 void loop() {
-	//TODO: low power mode.
-	//check status of switch
-		//if pressed, power off mic and clear display
-		//wait until swtich released
-		//setup pin change interrupt on switch, or software delay
-		//sleep
-		//wake
-		//power on mic
-		//restore display
-	//resume normal operation:
+  // Low power mode through push button https://www.arduino.cc/en/tutorial/switch
+  reading = digitalRead(SWITCH);    //check status of switch
+  if (reading == HIGH && previous == LOW && millis() - time > debounce) {
+    if (state == HIGH)
+      state = LOW;
+    else
+      state = HIGH;
+
+    time = millis();    
+  }
+
+  digitalWrite(MICVCC, state);     // button toggles mic on & off
+  previous = reading;
+  if(state == LOW) {
+    matrix.clear();                //if low power mode, clear display
+    matrix.show();
+  }
+  else {                           //resume normal operation:
     float nvol = 0;
     int previous_peak = -1;
     
@@ -209,4 +223,5 @@ void loop() {
     } else {
         drawImage(mouth_4);
     }
+  }
 } 
