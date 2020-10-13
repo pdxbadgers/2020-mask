@@ -94,7 +94,7 @@ const PROGMEM uint8_t mouth_smile[8][8] = {
 
 uint16_t palette[10] = {};
 Adafruit_NeoMatrix matrix = Adafruit_NeoMatrix(8, 8, LEDPIN,
-  NEO_MATRIX_TOP     + NEO_MATRIX_RIGHT +
+  NEO_MATRIX_BOTTOM     + NEO_MATRIX_LEFT +
   NEO_MATRIX_ROWS    + NEO_MATRIX_ZIGZAG,
   NEO_GRB            + NEO_KHZ800);
 
