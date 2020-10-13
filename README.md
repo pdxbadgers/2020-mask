@@ -1,7 +1,7 @@
 # 2020-mask
 talking LED mask for BSides 2020 presenters
 
-derived from https://github.com/TylerGlaiel/voicemask/blob/master/mask.ino, archive available: https://web.archive.org/web/20200618173024/https://github.com/TylerGlaiel/voicemask/blob/master/mask.ino
+derived from [TylerGlaiel's project](https://github.com/TylerGlaiel/voicemask/) now on [kickstarter](https://www.kickstarter.com/projects/jabbermask/jabbermask)
 
 ## Parts:
 - [$3.00 Arduino Pro Micro](https://www.aliexpress.com/item/32846843498.html)
